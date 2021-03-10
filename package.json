@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Ugo-Insalaco/Projet_media#readme",
   "dependencies": {
+    "ejs": "^3.1.6",
     "express": "^4.17.1"
   }
 }

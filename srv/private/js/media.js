@@ -1,0 +1,1 @@
+console.log('la page js est chargée')
