@@ -4,34 +4,46 @@
 	<meta charset="utf-8">
 	<title>Media Player</title>
 	<base href="/">
-	<link rel="icon" type="image/x-icon" href="images/logo2.png">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="icon" type="image/x-icon" href="/images/logo2.png">
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
         
     </head>
 
     <body>
-	<br>
-	Ceci est la page média
-        <%= id %>
-	</br> 
+	<!-- <input type="file" webkitdirectory=true/> -->
 
-	<br>
-	<input type="file" webkitdirectory=true/>
-	</br>
-	<br>
-	<script src="/private/js/media.js"></script>
-
-	<video  id="video_player" width="320" height="240" controls> 
-	<source src="video/video.mp4" type="video/mp4">
-	</video>
-	</br>
-
-	<br>
-	<audio id=audio-player  controls> 
-	<source src="/musique/Booba  - 92i Veyron.mp3" type="audio/mp3">
-	</video>
-	</br>
-
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-3 mt-2">
+				<div id="chemin" hidden></div>
+				<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+					<ol class="breadcrumb" id="breadcrumbChemin">
+					  <li class="breadcrumb-item">Home</li>
+					  <li class="breadcrumb-item active" aria-current="page">Library</li>
+					</ol>
+				  </nav>
+				<ul class="list-group-flush ml-0" id="list">
+				</ul>
+				<button type=button id="back"><</button>
+			</div>
+			<div class="col-9">
+				<div class="row mr-1 mt-2">
+					<video id="video_player" controls> 
+						<source src="video/video.mp4" type="video/mp4">
+					</video>
+				</div>
+				
+				<div class="row">
+					<audio id=audio_player controls> 
+						<source src="/musique/Booba  - 92i Veyron.mp3" type="audio/mp3">
+					</audio>	
+				</div>	
+			</div>
+		</div>
+	</div>
     </body>
-    
+	<script src="/js/jquery.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/private/js/media.js"></script>
 </html>
