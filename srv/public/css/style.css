@@ -6,3 +6,7 @@
 button{
     border-radius: 5px;
 }
+
+#add_playlist_form{
+    display: none;
+}

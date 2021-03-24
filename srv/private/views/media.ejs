@@ -11,7 +11,6 @@
     </head>
 
     <body>
-	<!-- <input type="file" webkitdirectory=true/> -->
 
 	<div class="container-fluid">
 		<div class="row">
@@ -19,26 +18,43 @@
 				<div id="chemin" hidden></div>
 				<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
 					<ol class="breadcrumb" id="breadcrumbChemin">
-					  <li class="breadcrumb-item">Home</li>
-					  <li class="breadcrumb-item active" aria-current="page">Library</li>
 					</ol>
 				  </nav>
-				<ul class="list-group-flush ml-0" id="list">
+				<ul class="list-group-flush ml-0" draggable=true ondragover="dragover_handler(event)" id="list">
 				</ul>
 				<button type=button id="back"><</button>
 			</div>
-			<div class="col-9">
-				<div class="row mr-1 mt-2">
-					<video id="video_player" controls> 
+			<div class="col-6">
+				<div class="row mt-2">
+					<video id="video_player" controls autoplay=true> 
 						<source src="video/video.mp4" type="video/mp4">
 					</video>
 				</div>
 				
-				<div class="row">
+				<!-- <div class="row">
 					<audio id=audio_player controls> 
 						<source src="/musique/Booba  - 92i Veyron.mp3" type="audio/mp3">
 					</audio>	
-				</div>	
+				</div>	 -->
+			</div>
+			<div class = "col-3 mt-2">
+				<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						Playlists
+					</ol>
+				</nav>
+				<ul class="list-group-flush ml-0" id="videoPlaylist" droppable=true ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
+					<li class="list-group-item">An item</li>
+				</ul>
+				<form class="row ml-4" id="add_playlist_form">
+					<div class="col-auto">
+					  <input type="text" class="form-control" id="playlistName" placeholder="playlist">
+					</div>
+					<div class="col-auto">
+					  <button type="button" class="btn btn-outline-secondary mt-1" id="submit_playlist">Ajouter</button>
+					</div>
+				  </form>
+				<button type=button id="back_playlist"><</button>
 			</div>
 		</div>
 	</div>
@@ -46,4 +62,20 @@
 	<script src="/js/jquery.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
 	<script src="/private/js/media.js"></script>
+
+	<script>
+		function dragover_handler(ev) {
+		 ev.preventDefault();
+		 ev.dataTransfer.dropEffect = "move";
+		}
+
+		function drop_handler(ev) {
+		 ev.preventDefault();
+		 console.log(ev)
+		 // On récupère l'identifiant de la cible et on ajoute l'élément déplacé au DOM de la cible
+		 var data = ev.dataTransfer.getData("text/plain");
+		 console.log(data)
+		 ev.target.appendChild(document.getElementById(data));
+		}
+	</script>
 </html>
