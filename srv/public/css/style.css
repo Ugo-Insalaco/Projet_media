@@ -10,3 +10,7 @@ button{
 #add_playlist_form{
     display: none;
 }
+
+#trash-icon{
+    width: 30px;
+}

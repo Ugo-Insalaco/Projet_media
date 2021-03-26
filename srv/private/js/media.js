@@ -1,5 +1,3 @@
-console.log('la page js est chargée')
-
 const updateChemin = function(e){
     let chemin = e.currentTarget.innerHTML
     let url = $('#chemin').html()
@@ -74,21 +72,23 @@ const retourChemin = function(e){
 
 const submitPlaylist = function(e){
     let playlistName = $("#playlistName").val()
-    $("#add_playlist_form").slideUp()
-    $.ajax({
-        type: "POST",
-        url: '/video/addPlaylist',
-        headers: {
-            "Content-Type": "application/vnd.api+json"
-        },
-        data:JSON.stringify({playlistName: playlistName}),
-        success: function(res){
-            getVideoPlaylists()
-        },
-        error: function(err){
-            console.log(err)
-        }
-    })
+    if(playlistName.trim()){
+        $("#add_playlist_form").slideUp()
+        $.ajax({
+            type: "POST",
+            url: '/video/addPlaylist',
+            headers: {
+                "Content-Type": "application/vnd.api+json"
+            },
+            data:JSON.stringify({playlistName: playlistName.trim()}),
+            success: function(res){
+                getVideoPlaylists()
+            },
+            error: function(err){
+                console.log(err)
+            }
+        })
+    }
 }
 
 const getVideoPlaylists = function(){
@@ -103,6 +103,7 @@ const getVideoPlaylists = function(){
              }
              $("#videoPlaylist").append('<button type=button id="add_playlist" class="list-group-item list-group-item-action">Ajouter une playlist + </button>')
              $("#add_playlist").on('click', showPlaylistForm)
+             $("#breadcrumbPlaylist").html('<li class="breadcrumb-item">Playlist</li>')
         },
         error: function(err){
             console.log(err)
@@ -110,24 +111,33 @@ const getVideoPlaylists = function(){
 }
 
 const getPlaylistElements = function(e){
-    console.log(e.currentTarget.innerHTML)
+    let playlistName = e.currentTarget.innerHTML
+    loadPlaylist(playlistName)
+}
+
+const loadPlaylist = function(playlistName){
     $.ajax({
         type:'POST',
         url: '/video/getPlaylistElements',
         headers: {
             "Content-Type": "application/vnd.api+json"
         },
-        data: JSON.stringify({playlistName: e.currentTarget.innerHTML}),
+        data: JSON.stringify({playlistName: playlistName}),
         success: function(res){
             $("#videoPlaylist").html("")
             for (let i=0; i<res.length; i++){
                 let split = res[i].split('/')
                 let titre = split.pop()
                 let url = split.join('/')
-                console.log(split, titre, url)
                 $("#videoPlaylist").append(`<button id="bouton_playlist${i}" type="button" draggable="true" class="list-group-item list-group-item-action">${titre}</button><div id="playlist_url${i}" hidden>${url}</div>`)
                 $(`#bouton_playlist${i}`).on("click", updatePlaylist)
+
             }
+            if(res.length===0){
+                $("#videoPlaylist").append('<div id="add_playlist" class="list-group-item">Glissez un élément pour l\'ajouter à la playlist</div>')
+            }
+            $("#breadcrumbPlaylist").html('<li class="breadcrumb-item">Playlist</li>')
+            $('#breadcrumbPlaylist').append(`<li id="bredcrumbPlaylistName" class="breadcrumb-item">${playlistName}</li>`)
         },
         errror: function(err){
             console.log(err)
@@ -149,6 +159,7 @@ const showPlaylistForm = function(e){
         $("#add_playlist_form").slideDown()
     }
 }
+
 $("#back").on("click", retourChemin)
 $("#back_playlist").on("click", getVideoPlaylists)
 $("#submit_playlist").on('click', submitPlaylist)

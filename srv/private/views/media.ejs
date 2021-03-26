@@ -20,7 +20,7 @@
 					<ol class="breadcrumb" id="breadcrumbChemin">
 					</ol>
 				  </nav>
-				<ul class="list-group-flush ml-0" draggable=true ondragover="dragover_handler(event)" id="list">
+				<ul class="list-group-flush ml-0" ondragstart="playlist_dragstart_handler(event)" id="list">
 				</ul>
 				<button type=button id="back"><</button>
 			</div>
@@ -39,11 +39,11 @@
 			</div>
 			<div class = "col-3 mt-2">
 				<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-					<ol class="breadcrumb">
-						Playlists
+					<ol class="breadcrumb" id="breadcrumbPlaylist">
+						<li class="breadcrumb-item">Playlist</li>
 					</ol>
 				</nav>
-				<ul class="list-group-flush ml-0" id="videoPlaylist" droppable=true ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
+				<ul class="list-group-flush ml-0" id="videoPlaylist"  droppable=true ondrop="playlist_drop_handler(event)"  ondragover="dragover_handler(event)"ondragstart="trash_dragstart_handler(event)">
 					<li class="list-group-item">An item</li>
 				</ul>
 				<form class="row ml-4" id="add_playlist_form">
@@ -55,6 +55,7 @@
 					</div>
 				  </form>
 				<button type=button id="back_playlist"><</button>
+				<img id = "trash-icon" src="/images/trash.svg" alt="trash" ondragover="dragover_handler(event)" ondrop="trash_drop_handler(event)">
 			</div>
 		</div>
 	</div>
@@ -64,18 +65,81 @@
 	<script src="/private/js/media.js"></script>
 
 	<script>
-		function dragover_handler(ev) {
-		 ev.preventDefault();
-		 ev.dataTransfer.dropEffect = "move";
+		function playlist_dragstart_handler(ev) {
+			ev.dataTransfer.setData('text/plain',`${$("#chemin").html()}/${ev.target.innerText}`)
 		}
 
-		function drop_handler(ev) {
-		 ev.preventDefault();
-		 console.log(ev)
-		 // On récupère l'identifiant de la cible et on ajoute l'élément déplacé au DOM de la cible
-		 var data = ev.dataTransfer.getData("text/plain");
-		 console.log(data)
-		 ev.target.appendChild(document.getElementById(data));
+		function dragover_handler(ev){
+			ev.preventDefault();
+		}
+
+		function playlist_drop_handler(ev) {
+			ev.preventDefault();
+			let playlistName = $("#bredcrumbPlaylistName").html()
+			// On récupère l'identifiant de la cible et on ajoute l'élément déplacé au DOM de la cible
+			let data = ev.dataTransfer.getData("text/plain");
+			if(data.split('.').length>=2 && playlistName!== undefined){
+				$.ajax({
+					type: 'POST',
+					url: '/video/addPlaylistElement',
+					headers: {
+						"Content-Type": "application/vnd.api+json"
+					},
+					data: JSON.stringify({playlistName: playlistName, elementURL: data}),
+					success: function(res){
+						loadPlaylist(playlistName)
+					},
+					error: function(err){
+						console.log(err)
+					}
+				})
+			}
+		}
+		function trash_dragstart_handler(ev){
+			let id = ev.target.id.split('bouton_playlist')[1]
+			if(id){
+				ev.dataTransfer.setData('text/plain',`${$(`#playlist_url${id}`).text()}/${ev.target.innerText}`)
+			}
+			else{
+				id = ev.target.id.split('playlistbouton')[1]
+				ev.dataTransfer.setData('text/plain',$(`#playlistbouton${id}`).text())
+			}
+		}
+		function trash_drop_handler(ev){
+			let data = ev.dataTransfer.getData("text/plain");
+			let playlistName = $("#bredcrumbPlaylistName").html()
+			if(data.split('.').length>1 && playlistName!== undefined){
+				$.ajax({
+					type: 'DELETE',
+					url: '/video/deletePlaylistElement',
+					headers: {
+						"Content-Type": "application/vnd.api+json"
+					},
+					data: JSON.stringify({playlistName: playlistName, elementURL: data}),
+					success: function(res){
+						loadPlaylist(playlistName)
+					},
+					error: function(err){
+						console.log(err)
+					}
+				})
+			}
+			else{
+				$.ajax({
+					type: 'DELETE',
+					url: '/video/deletePlaylist',
+					headers: {
+						"Content-Type": "application/vnd.api+json"
+					},
+					data: JSON.stringify({playlistName: data}),
+					success: function(res){
+						getVideoPlaylists()
+					},
+					error: function(err){
+						console.log(err)
+					}
+				})
+			}
 		}
 	</script>
 </html>

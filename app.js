@@ -158,11 +158,42 @@ app.delete('/video/deletePlaylistElement', jsonParser, function(req, res){
         fs.writeFile('./var/playlist_video.json',JSON.stringify(playlistobj) ,function (err) {
             if (err) throw err;
             else{
-                console.log(playlistobj)
                 res.status(200).send({
                     route: '/video/deletePlaylistElement',
                     method: 'POST',
                     message: 'L\'élément a bien été supprimé'
+                })
+            }
+        })
+
+    }
+})
+
+app.delete('/video/deletePlaylist', jsonParser, function(req, res){
+    let playlistName = xss(req.body.playlistName)
+    if(playlistName===undefined){
+        res.status(400).send({
+            route: '/video/deletePlaylistElement',
+            method: 'POST',
+            message: 'Paramètres invalides'
+        }) 
+    }
+    else if(!playlistobj.hasOwnProperty(playlistName)){
+        res.status(404).send({
+            route: '/video/deletePlaylistElement',
+            method: 'POST',
+            message: 'La playlist n\'existe pas'
+        })
+    }
+    else{
+        delete playlistobj[playlistName]
+        fs.writeFile('./var/playlist_video.json',JSON.stringify(playlistobj) ,function (err) {
+            if (err) throw err;
+            else{
+                res.status(200).send({
+                    route: '/video/deletePlaylistElement',
+                    method: 'POST',
+                    message: 'La playlist a bien été supprimé'
                 })
             }
         })
