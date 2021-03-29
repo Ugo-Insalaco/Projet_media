@@ -32,6 +32,7 @@ app.get('/videoPlaylist', function(req,res){
     res.send(Object.keys(playlistobj))
 })
 
+//Renvoie les dossiers où se trouvent les videos
 app.post('/video/getFolderVideos',  jsonParser, function(req, res){
     folderName = xss(req.body.folderName)
     if(folderName==undefined){
@@ -52,6 +53,8 @@ app.post('/video/getFolderVideos',  jsonParser, function(req, res){
         })
     }
 })
+
+//récupération d'un élément d'une playlist
 app.post('/video/getPlaylistElements', jsonParser, function(req, res){
     playlistName = xss(req.body.playlistName)
     if(playlistName!==undefined){
@@ -75,6 +78,7 @@ app.post('/video/getPlaylistElements', jsonParser, function(req, res){
     }
 })
 
+//Fonction d'ajout d'une playlist
 app.post('/video/addPlaylist', jsonParser, function(req, res){
     playlistName = xss(req.body.playlistName)
     if(playlistName!== undefined){
@@ -108,6 +112,7 @@ app.post('/video/addPlaylist', jsonParser, function(req, res){
     }
 })
 
+//Fonction d'ajout d'un élément à une playlist
 app.post('/video/addPlaylistElement', jsonParser, function(req, res){
     let playlistName = xss(req.body.playlistName)
     let elementURL = xss(req.body.elementURL)
@@ -148,6 +153,7 @@ app.post('/video/addPlaylistElement', jsonParser, function(req, res){
     }
 })
 
+//fonction de suppression d'un element de la playlist
 app.delete('/video/deletePlaylistElement', jsonParser, function(req, res){
     let playlistName = xss(req.body.playlistName)
     let elementURL = xss(req.body.elementURL)
@@ -188,6 +194,7 @@ app.delete('/video/deletePlaylistElement', jsonParser, function(req, res){
     }
 })
 
+//Fonction de suppression d'une playlist
 app.delete('/video/deletePlaylist', jsonParser, function(req, res){
     let playlistName = xss(req.body.playlistName)
     if(playlistName===undefined){
@@ -219,6 +226,7 @@ app.delete('/video/deletePlaylist', jsonParser, function(req, res){
 
     }
 })
+
 // Récupération des chemins d'accès aux fichiers du dossier de travail et initialisation des requêtes pour chaque dossier
 const recupfichier = function(chemin){
     // récupération nom fichiers
@@ -254,8 +262,6 @@ const EcrirePlaylist= function(name,song){
         if (err) throw err;
     })
 }
-
-//EcrirePlaylist('Playlist1',['LesSimpsons','futurama','american dad'])
 
 console.log('lancement du serveur')
 app.listen(3000)
