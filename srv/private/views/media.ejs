@@ -12,6 +12,21 @@
 
     <body>
 
+	<div class="container-xl" id="bandeau">
+		<div class="container-fluid">
+			<img src="/images/logo-ecl-white.png" alt="" width="200" height="60" class="d-inline-block align-text-top" href="https://www.ec-lyon.fr/">
+
+			<a class="navbar-brand" href="https://github.com/Ugo-Insalaco/Projet_media">
+			  <span id="names">
+				Insalaco Ugo et Zouaoui Iliès
+			  </span>
+			</a>
+		  </div>
+
+		<h1 id="titre-bandeau"> Media Player Vidéo</h1>
+
+	</div>
+
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-3 mt-2">
@@ -22,7 +37,8 @@
 				  </nav>
 				<ul class="list-group-flush ml-0" ondragstart="playlist_dragstart_handler(event)" id="list">
 				</ul>
-				<button type=button id="back"><</button>
+				<img id = "back" class = "button-icon" src="/images/arrow-return-left.svg">
+				<img id = "shuffle_folder" src="/images/shuffle.svg" alt=shuffle class = "button-icon">
 			</div>
 			<div class="col-6">
 				<div class="row mt-2">
@@ -31,11 +47,6 @@
 					</video>
 				</div>
 				
-				<!-- <div class="row">
-					<audio id=audio_player controls> 
-						<source src="/musique/Booba  - 92i Veyron.mp3" type="audio/mp3">
-					</audio>	
-				</div>	 -->
 			</div>
 			<div class = "col-3 mt-2">
 				<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -53,9 +64,9 @@
 					<div class="col-auto">
 					  <button type="button" class="btn btn-outline-secondary mt-1" id="submit_playlist">Ajouter</button>
 					</div>
-				  </form>
-				<button type=button id="back_playlist"><</button>
-				<img id = "trash-icon" src="/images/trash.svg" alt="trash" ondragover="dragover_handler(event)" ondrop="trash_drop_handler(event)">
+				</form>
+				<img id = "back_playlist" class = "button-icon" src="/images/arrow-return-left.svg">
+				<img id = "trash-icon" class = "button-icon" src="/images/trash.svg" alt="trash" ondragover="dragover_handler(event)" ondrop="trash_drop_handler(event)">
 			</div>
 		</div>
 	</div>

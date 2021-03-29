@@ -32,6 +32,26 @@ app.get('/videoPlaylist', function(req,res){
     res.send(Object.keys(playlistobj))
 })
 
+app.post('/video/getFolderVideos',  jsonParser, function(req, res){
+    folderName = xss(req.body.folderName)
+    if(folderName==undefined){
+        res.status(400).send({
+            route: '/video/getFolderVideos',
+            method: 'POST',
+            message: 'Paramètre folderName manquant'
+        })
+    }
+    else{
+        fs.readdir(path.join(__dirname,`/srv/public${folderName}`), function(err,files){
+            let videos = files.filter(file=>file.split('.').length>1)
+            res.status(200).send({
+                route: '/video/getFolderVideos',
+                method: 'POST',
+                data: JSON.stringify({videos: videos})
+            })
+        })
+    }
+})
 app.post('/video/getPlaylistElements', jsonParser, function(req, res){
     playlistName = xss(req.body.playlistName)
     if(playlistName!==undefined){
@@ -67,7 +87,6 @@ app.post('/video/addPlaylist', jsonParser, function(req, res){
         }
         else{
             playlistobj[playlistName] = []
-            console.log(playlistobj)
             fs.writeFile('./var/playlist_video.json',JSON.stringify(playlistobj) ,function (err) {
                 if (err) throw err;
                 else{

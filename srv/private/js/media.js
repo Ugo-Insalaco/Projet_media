@@ -125,6 +125,7 @@ const loadPlaylist = function(playlistName){
         data: JSON.stringify({playlistName: playlistName}),
         success: function(res){
             $("#videoPlaylist").html("")
+            $("#add_playlist_form").slideUp()
             for (let i=0; i<res.length; i++){
                 let split = res[i].split('/')
                 let titre = split.pop()
@@ -160,8 +161,41 @@ const showPlaylistForm = function(e){
     }
 }
 
+const changeVideo = function(e){
+    if(reading_type==="shuffle"){
+        $.ajax({
+            type: "POST",
+            url: "/video/getFolderVideos",
+            headers: {
+                "Content-Type": "application/vnd.api+json"
+            },
+            data: JSON.stringify({folderName: folder_reading}),
+            success: function(res){
+                let data = JSON.parse(res.data)
+                const randomElement = data.videos[Math.floor(Math.random() * data.videos.length)];
+                $("#video_player").attr("src",`${folder_reading}/${randomElement}`)  
+
+            },
+            error: function(err){
+                console.log(err)
+            }
+        })
+    }
+}
+
+const shuffle = function(e){
+    folder_reading = $('#chemin').html()
+    reading_type = "shuffle"
+    //$("#shuffle_folder").style.backgroundColor= "black";
+}
+
 $("#back").on("click", retourChemin)
 $("#back_playlist").on("click", getVideoPlaylists)
 $("#submit_playlist").on('click', submitPlaylist)
+$("#video_player").on("ended", changeVideo)
+$("#shuffle_folder").on("click", shuffle)
+
+let folder_reading = ""
+let reading_type = ""
 initialisation()
 getVideoPlaylists()
